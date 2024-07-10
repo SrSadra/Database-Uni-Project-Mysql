@@ -7,17 +7,22 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 // import com.mysql.cj.protocol.Resultset;
 
+import io.github.cdimascio.dotenv.Dotenv;
+
 public class Database {
 
     private static Connection con = null;
 
     static void databaseInit(){
         try{
-            String url = System.getenv("URL");
-            String username = System.getenv("USERNAME");
-            String pass = System.getenv("PASS");
+            Dotenv dotenv = Dotenv.load();
+
+            String url = dotenv.get("URL");
+            String username = dotenv.get("USERNAME_DB");
+            String pass = dotenv.get("PASS");
             
-            Class.forName("com.mysql.jdbc.Driver");
+            Class.forName("com.mysql.cj.jdbc.Driver");
+            // System.out.println(url + username + pass);
             con = DriverManager.getConnection(url, username, pass);
 
         }catch(ClassNotFoundException | SQLException ec){

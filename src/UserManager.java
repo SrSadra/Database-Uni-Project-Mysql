@@ -2,7 +2,6 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-
 import model.User;
 
 public class UserManager {
@@ -10,9 +9,11 @@ public class UserManager {
     
     
     private final Connection connection;
+    private ProfileManager profileManager;
 
     public UserManager(){
         connection = Database.getCon();
+        profileManager = new ProfileManager();
     }
 
     public boolean create(User user){
@@ -22,8 +23,16 @@ public class UserManager {
             stm.setString(1, user.getUsername());
             stm.setString(2, user.getName());
             stm.setString(3, user.getLastname());
-            stm.setDate(4, new java.sql.Date(user.getBirthdate().getTime()));
+            if (user.getBirthdate() == null){
+                stm.setDate(4, null);
+            }
+            else{
+                stm.setDate(4, new java.sql.Date(user.getBirthdate().getTime()));
+            }
             stm.setString(5, user.getPassword());
+            if(!profileManager.createProfile(user.getUsername())){
+                return false;
+            }
             stm.executeUpdate();
             return true;
         }catch (SQLException e){
@@ -37,11 +46,14 @@ public class UserManager {
             PreparedStatement stm = connection.prepareStatement(UserQueries.GET_USERNAME);
             stm.setString(1, username);
             ResultSet res = stm.executeQuery();
+            if (!res.next()){
+                return null;
+            }
             return res.getString("username");
         }catch (SQLException e){
             System.out.println(e);
         }
-        return null;
+        return "";
     }
 
     // public boolean isExisted(String[] fields, String table){
@@ -59,9 +71,12 @@ public class UserManager {
             stm.setString(1, username);
             stm.setString(2, password);
             ResultSet res = stm.executeQuery();
+            if (!res.next()){
+                return null;
+            }
             User user = new User(
+                        res.getString("first_name"),
                         res.getString("username"),
-                        res.getString("name"),
                         res.getString("last_name"),
                         res.getString("password"),
                         res.getDate("birthdate")
@@ -71,6 +86,25 @@ public class UserManager {
             System.out.println(e);
         }
         return null;
+    }
+
+    public boolean setFirstnameLastname(String username, String newname, int button){
+        try {
+            PreparedStatement stm;
+            if (button == 1){
+                stm = connection.prepareStatement(UserQueries.SET_FIRSTNAME);
+            }
+            else{
+                stm = connection.prepareStatement(UserQueries.SET_LASTNAME);
+            }
+            stm.setString(1, newname);
+            stm.setString(2, username);
+            stm.executeUpdate();
+            return true;
+        }catch (SQLException e){
+            System.out.println(e);
+        }
+        return false;
     }
 
 
