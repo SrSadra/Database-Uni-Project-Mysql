@@ -3,6 +3,7 @@ public class ProfileQueries {
     "(background_id, username,intro, featured, about )" +
     "VALUES (? , ?, ?, ? ,?);";
     public static final String GET_PROFILE_ID = "SELECT id FROM profile where username = ?";
+    public static final String GET_PROFILE_BY_ID = "SELECT * FROM profile where id = ?";
     public static final String UPDATE_ABOUT = "UPDATE profile SET about = ? where username = ?";
     public static final String UPDATE_BACKGROUND_PROFILE = "UPDATE profile SET background_id = ? where username = ?";
 

@@ -5,6 +5,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 
+import model.ProfileModel;
 import model.Skill;
 import model.User;
 
@@ -145,7 +146,17 @@ public class ProfileManager {
     }
 
 
-
+    public ProfileModel getProfileById(int profile_id){
+        try {
+            PreparedStatement stm = connection.prepareStatement(ProfileQueries.GET_PROFILE_BY_ID);
+            stm.setInt(1,profile_id);
+            ResultSet res = stm.executeQuery();
+            return new ProfileModel(profile_id, res.getString("username"), res.getString("about"));
+        }catch (SQLException e){
+            System.out.println(e);
+        }
+        return null;
+    }
 
 
 }
