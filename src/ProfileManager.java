@@ -100,7 +100,9 @@ public class ProfileManager {
             PreparedStatement stm = connection.prepareStatement(SkillQueries.GET_SKILL_ID);
             stm.setString(1,prof_username);
             ResultSet res = stm.executeQuery();
-            return res.getInt("id");
+            if (res.next()){
+                return res.getInt("id");
+            }
         }catch (SQLException e){
             System.out.println(e);
         }
@@ -151,7 +153,27 @@ public class ProfileManager {
             PreparedStatement stm = connection.prepareStatement(ProfileQueries.GET_PROFILE_BY_ID);
             stm.setInt(1,profile_id);
             ResultSet res = stm.executeQuery();
-            return new ProfileModel(profile_id, res.getString("username"), res.getString("about"));
+            if (res.next()){
+                return new ProfileModel(profile_id, res.getString("username"), res.getString("about"));
+            }
+        }catch (SQLException e){
+            System.out.println(e);
+        }
+        return null;
+    }
+
+
+    public ProfileModel getProfileByUsername(String username){
+        try {
+            PreparedStatement stm = connection.prepareStatement(ProfileQueries.GET_PROFILE_BY_USERNAME);
+            // System.out.println(username);
+            stm.setString(1,username);
+            ResultSet res = stm.executeQuery();
+            if (res.next()){
+                System.out.println("alo");
+                return new ProfileModel(res.getInt("id"), res.getString("username"), res.getString("about"));
+            }
+            return null;
         }catch (SQLException e){
             System.out.println(e);
         }

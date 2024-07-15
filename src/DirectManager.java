@@ -2,6 +2,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.ArrayList;
 
 import model.DirectModel;
@@ -21,16 +22,21 @@ public class DirectManager {
 
     public ArrayList<ProfileModel> getConnections(int profile_id){
         try {
-            PreparedStatement stm = connection.prepareStatement(DirectQueries.GET_INVITATIONS);
+            // PreparedStatement stm = connection.prepareStatement(NetworkQueries.GET_CONNECTIONS);
+            // stm.setInt(1,profile_id);
+            // ResultSet res = stm.executeQuery();
+            // if(!res.next()){
+            //     System.out.println("THERE IS NO CONNECTIONS!");
+            //     return null;
+            // }
+            PreparedStatement stm = connection.prepareStatement(NetworkQueries.GET_CONNECTIONS);
             stm.setInt(1,profile_id);
             ResultSet res = stm.executeQuery();
-            if(!res.next()){
-                System.out.println("THERE IS NO CONNECTIONS!");
-                return null;
-            }
+            //still dont know
             ArrayList<ProfileModel> arr = new ArrayList<>();
             while(res.next()){
-                arr.add(new ProfileModel(res.getInt("p.id"), res.getString("p.username"), null));
+                System.out.println("alfa");
+                arr.add(new ProfileModel(res.getInt("p.id"), res.getString("p.username"), res.getString("p.about")));
             }
             return arr;
         }catch (SQLException e){
@@ -50,7 +56,7 @@ public class DirectManager {
                 System.out.println("You have already a chat");
                 return res1.getInt(1);
             }
-            PreparedStatement stm = connection.prepareStatement(DirectQueries.CREATE_DIRECT);
+            PreparedStatement stm = connection.prepareStatement(DirectQueries.CREATE_DIRECT, Statement.RETURN_GENERATED_KEYS);
 
             stm.setInt(1, profile);
             stm.setInt(2, to);
@@ -83,7 +89,7 @@ public class DirectManager {
             ResultSet rs = stm.executeQuery();
             ArrayList<Message> arr = new ArrayList<>();
             while (rs.next()){
-                arr.add(new Message(rs.getInt(1), rs.getInt(2), rs.getInt(3), rs.getInt(4), rs.getString(5), rs.getDate(6)));
+                arr.add(new Message(rs.getInt(1), rs.getInt(2), rs.getInt(3), rs.getString(4), rs.getDate(5)));
             }
             return arr;
 
@@ -96,19 +102,54 @@ public class DirectManager {
 
     public boolean createMessage(Message message){
         try{
-            PreparedStatement stm = connection.prepareStatement(DirectQueries.CREATE_MESSAGE);
+            PreparedStatement stm = connection.prepareStatement(DirectQueries.CREATE_MESSAGE, Statement.RETURN_GENERATED_KEYS);
             // Set the parameters for the PreparedStatement
-            stm.setInt(1, message.getDirect_id());
-            stm.setInt(2, message.getFrom_id());
-            stm.setInt(3, message.getTo_id());
-            stm.setString(4, message.getData());
-            stm.setDate(5, new java.sql.Date(message.getTime().getTime()));
+            stm.setInt(1, message.getFrom_id());
+            stm.setInt(2, message.getTo_id());
+            stm.setString(3, message.getData());
+            stm.setDate(4, new java.sql.Date(message.getTime().getTime()));
             stm.executeUpdate();
+            ResultSet rs1 = stm.getGeneratedKeys();
+            int message_key = 0;
+            if (rs1.next()){
+                message_key = rs1.getInt(1);
+            }
+
+            PreparedStatement stm2 = connection.prepareStatement(DirectQueries.CREATE_MESSAGE_DIRECT);
+            int from_direct_id = getDirectId(message.getFrom_id(),message.getTo_id());
+            stm2.setInt(1, message_key);
+            stm2.setInt(2, from_direct_id);
+            stm2.executeUpdate();
+
+
+            PreparedStatement stm3 = connection.prepareStatement(DirectQueries.CREATE_MESSAGE_DIRECT);
+            int to_direct_id = getDirectId(message.getTo_id(), message.getFrom_id());
+            stm3.setInt(1, message_key);
+            stm3.setInt(2, to_direct_id);
+            stm3.executeUpdate();
+            
             return true;
         }catch(SQLException e){
             System.out.println(e);
         }
         return false;
+    }
+
+
+    public int getDirectId(int profile_id, int to_id){
+        try{
+            PreparedStatement stm = connection.prepareStatement(DirectQueries.GET_DIRECT_ID);
+            stm.setInt(1, profile_id);
+            stm.setInt(2, to_id);
+            ResultSet rs = stm.executeQuery();
+            if (rs.next()){
+                return rs.getInt(1);
+            }
+            return -1;
+        }catch (SQLException e){
+            System.out.println(e);
+        }
+        return -1;
     }
 
 
@@ -130,7 +171,11 @@ public class DirectManager {
             ResultSet rs = stm.executeQuery();
             ArrayList<DirectModel> arr = new ArrayList<>();
             while (rs.next()){
-                arr.add(new DirectModel(rs.getInt(1), rs.getInt(2), rs.getInt(3), rs.getBoolean(4), rs.getBoolean(5),rs.getString(6)));
+                DirectModel tmp = new DirectModel(rs.getInt(1), rs.getInt(2), rs.getInt(3), rs.getBoolean(4), rs.getBoolean(5));
+                if (butt != 0){
+                    tmp.setTo_username(rs.getString(6));
+                }
+                arr.add(tmp);
             }
             return arr;
         }catch(SQLException e){
@@ -169,9 +214,13 @@ public class DirectManager {
     public boolean deleteDirect(int direct_id){
         try{
             PreparedStatement stm = connection.prepareStatement(DirectQueries.DELETE_DIRECT);
-
             stm.setInt(1, direct_id);
+            
+            PreparedStatement stm2 = connection.prepareStatement(DirectQueries.DELETE_MESSAGE_DIRECT);
+            stm2.setInt(1, direct_id);
+            
             stm.executeUpdate();
+            stm2.executeUpdate();
             return true;
         }catch(SQLException e){
             System.out.println(e);
@@ -189,7 +238,9 @@ public class DirectManager {
             ResultSet rs = stm.executeQuery();
             ArrayList<DirectModel> arr = new ArrayList<>();
             while (rs.next()){
-                arr.add(new DirectModel(rs.getInt(1), rs.getInt(2), rs.getInt(3), rs.getBoolean(4), rs.getBoolean(5), rs.getString(6)));
+                DirectModel dModel = new DirectModel(rs.getInt(1), rs.getInt(2), rs.getInt(3), rs.getBoolean(4), rs.getBoolean(5));
+                dModel.setTo_username(rs.getString(6));
+                arr.add(dModel);
             }
             return arr;
 

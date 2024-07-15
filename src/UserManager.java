@@ -75,7 +75,7 @@ public class UserManager {
                 return null;
             }
             User user = new User(
-                        res.getString("first_name"),
+                        res.getString("First_name"),
                         res.getString("username"),
                         res.getString("last_name"),
                         res.getString("password"),

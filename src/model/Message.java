@@ -10,9 +10,8 @@ public class Message {
     private String data;
     private Date time; 
     
-    public Message(int message_id, int direct_id,int from_id, int to_id, String data, Date time){
+    public Message(int message_id,int from_id, int to_id, String data, Date time){
         this.message_id = message_id;
-        this.direct_id = direct_id;
         this.from_id = from_id;
         this.to_id = to_id;
         this.data = data;

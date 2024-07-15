@@ -11,4 +11,6 @@ public class ProfileQueries {
 
     public static final String CREATE_LANGUAGE_PROFILE = "INSERT INTO profile_lang (id, name) VALUES (?, ?)";//Proficiency
     public static final String GET_LANGUAGE = "SELECT * FROM language where name = ?";
+
+    public static final String GET_PROFILE_BY_USERNAME = "SELECT * FROM profile where username = ?";
 }

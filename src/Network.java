@@ -6,15 +6,30 @@ import model.ProfileModel;
 public class Network {
     private Scanner inp = ReqController.inp;
     private NetworkManager networkManager; 
+    private ProfileManager profileManager;
 
     public Network(){
         networkManager = new NetworkManager();
+        profileManager = new ProfileManager();
     }
 
 
     public void searchUser(ProfileModel profile){// need work
-        System.out.println("Search Username to send invitation: ");
-        String username = inp.next();
+        while (true){
+            System.out.println("Search Username to send invitation: ");
+            String username = inp.next();
+            ProfileModel to = profileManager.getProfileByUsername(username);
+            if (to == null){
+                System.out.println("There is no such User");
+                continue;
+            }
+            if (networkManager.createInvitation(profile.getProfile_id(), to.getProfile_id())){
+                System.out.println("An Invitation has been sent to " + to.getUsername());
+                return;
+            }
+            System.out.println("AN ERROR OCCURED!");
+        }
+
     }
 
     public void getInvitation(ProfileModel profile){
@@ -22,12 +37,20 @@ public class Network {
         ArrayList<ProfileModel> arr = networkManager.getInvitations(profile.getProfile_id());
         if (arr.size() == 0){
             System.out.println("There is no Invitations");
+            return;
         }
         while(true){
             for (int i = 0 ; i < arr.size() ; i++){
                 ProfileModel tmp = arr.get(i);
+
                 System.out.println(i + 1 + " " + tmp.getUsername() + " 1.Accept 2.Ignore");
-                System.out.println(tmp.getAbout());
+                if (tmp.getAbout() != null){
+                    System.out.println(tmp.getAbout());
+                }
+                int mutual = networkManager.mutualConnections(tmp.getProfile_id(), tmp.getProfile_id());
+                if (mutual >= 0){
+                    System.out.println("You Have " + mutual + " Mutual Friends!");
+                }
                 System.out.println("----------------------");
             }
             String button = inp.nextLine();
@@ -65,7 +88,7 @@ public class Network {
                 System.out.println("AN ERORR OCCURED!");
                 continue;
             }
-            System.out.println("An Initation has been sent to " + to.getUsername());
+            System.out.println("An Invitation has been sent to " + to.getUsername());
             return;
         }
     }

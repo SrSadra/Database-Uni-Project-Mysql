@@ -58,10 +58,11 @@ public class NetworkManager {
             stm2.setInt(1, friend_id);
             stm2.setInt(2, profile_id);
             Date tmp = new Date();
-            stm2.setDate(3,new java.sql.Date((tmp.getTime())));
+            stm2.setDate(3,new java.sql.Date(tmp.getTime()));
             PreparedStatement stm3 = connection.prepareStatement(NetworkQueries.CREATE_CONNECTIONS);
             stm3.setInt(1, profile_id);
             stm3.setInt(2, friend_id);
+            stm3.setDate(3,new java.sql.Date((tmp.getTime())));
 
 
             stm.executeUpdate();
@@ -103,6 +104,24 @@ public class NetworkManager {
             System.out.println(e);
         }
         return null;
+    }
+
+
+    public int mutualConnections(int profile_id,int target_id){
+        try{
+            PreparedStatement stm = connection.prepareStatement(NetworkQueries.GET_MUTUAL_CONNECTIONS);
+            stm.setInt(1, profile_id);
+            stm.setInt(2, target_id);
+            ResultSet rs = stm.executeQuery();
+            int tmp = 0;
+            while (rs.next()){
+                tmp = rs.getInt("counts");
+            }
+            return tmp;
+        }catch (SQLException e){
+            System.out.println(e);
+        }
+        return -1;
     }
 
 

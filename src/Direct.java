@@ -23,10 +23,18 @@ public class Direct {
         while(true){
             System.out.println("Choose a User to start (0 for back): ");
             ArrayList<ProfileModel> conn = directManager.getConnections(profile.getProfile_id());
+            if (conn == null){
+                return;
+            }
+            else if (conn.size() == 0){
+                System.out.println("There Is No Connections!");
+                return;
+            }
             for (int i = 0 ; i < conn.size() ; i++){
                 System.out.println(i + 1 + " " + conn.get(i).getUsername());
             }
             int button = inp.nextInt();
+            inp.nextLine();
             if (button == 0){
                 return;
             }
@@ -42,6 +50,7 @@ public class Direct {
 
 
     public void goDirect(int direct_id,ProfileModel profile, ProfileModel to){
+        inp.nextLine();
         ArrayList<Message> arr = directManager.getDirectMessages(direct_id);
         if (arr.size() == 0){
             System.out.println("There is no message...\nStart conversation (skip):");
@@ -53,28 +62,29 @@ public class Direct {
                 Message message = arr.get(i);
                 if (message.getFrom_id() == to.getProfile_id()){ // if sender is our contact
                     System.out.print("               ");
-                    System.out.println(to.getUsername() + " :" + message.getData() + " -" + message.getTime());
+                    System.out.println(to.getUsername() + " : " + message.getData() + "  " + message.getTime());
                 } 
                 else{//if us
-                    System.out.println(profile.getUsername() + " :" + message.getData() + " -" + message.getTime());
+                    System.out.println(profile.getUsername() + " : " + message.getData() + "  " + message.getTime());
                 }
             }
+        }
             while(true){
                 String text = inp.nextLine();
                 if (text.equals("skip")){
                     return;
                 }
-                if(!directManager.createMessage(new Message(0,direct_id, profile.getProfile_id(), to.getProfile_id(), text,new Date()))){ // date correct? 
+                if(!directManager.createMessage(new Message(0, profile.getProfile_id(), to.getProfile_id(), text,new Date()))){  
                     System.out.println("AN ERROR OCCURED!");
                     continue;
                 }
                 System.out.println(profile.getUsername() + " :" + text);
             }
-        }
     }
 
 
     public void manageDirects(ProfileModel profileModel){
+        inp.nextLine();
         ArrayList<DirectModel> arr = directManager.getDirects(profileModel.getProfile_id(), 0);
         while (true){
             if (arr.size() == 0){
@@ -85,7 +95,7 @@ public class Direct {
                 DirectModel tmp = arr.get(i);
                 System.out.print(i + 1 + " " + tmp.getTo_id());
                 if (tmp.getIs_readed()){
-                    System.out.println(" 1.Mark as Unread");
+                    System.out.print(" 1.Mark as Unread ");
                 }
                 if (!tmp.getIs_archived()){
                     System.out.print("2.Archive ");
@@ -146,6 +156,7 @@ public class Direct {
 
 
     public void searchDirects(ProfileModel profileModel){
+        inp.nextLine();
         while (true){
             System.out.println("Enter something to Search: ");
             String text = inp.nextLine();
@@ -160,7 +171,7 @@ public class Direct {
             }
             int button = inp.nextInt();
             if (button == 0){
-                continue;
+                return;
             }
             DirectModel tmp  = arr.get(button - 1);
             ProfileModel to = profileManager.getProfileById(tmp.getTo_id());

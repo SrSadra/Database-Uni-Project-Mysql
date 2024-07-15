@@ -9,13 +9,12 @@ public class DirectModel {
 
     private String to_username;
     
-    public DirectModel(int direct_id, int user_id, int to_id, boolean is_readed, boolean is_archived,String to_username){
+    public DirectModel(int direct_id, int user_id, int to_id, boolean is_readed, boolean is_archived){
         this.direct_id = direct_id;
         this.user_id = user_id;
         this.to_id = to_id;
         this.is_readed = is_readed;
         this.is_archived = is_archived;
-        this.to_username = to_username;
     }
 
     public void setDirect_id(int direct_id) {
@@ -44,5 +43,9 @@ public class DirectModel {
 
     public String getTo_username() {
         return to_username;
+    }
+
+    public void setTo_username(String to_username) {
+        this.to_username = to_username;
     }
 }

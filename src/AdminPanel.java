@@ -20,6 +20,18 @@ public class AdminPanel {
             stm.addBatch(AdminQueries.CREATE_SKILL_TABLE);
             stm.addBatch(AdminQueries.CREATE_USER_TABLE);
             stm.addBatch(AdminQueries.CREATE_LANGUAGE_TABLE);
+            stm.addBatch(AdminQueries.CREATE_CONNECTION_TABLE);
+            stm.addBatch(AdminQueries.CREATE_DIRECTS_TABLE);
+            stm.addBatch(AdminQueries.CREATE_INVITATIONS_TABLE);
+            stm.addBatch(AdminQueries.CREATE_MESSAGE_TABLE);
+            stm.addBatch(AdminQueries.CREATE_MESSAGE_DIRECT_TABLE);
+            stm.addBatch(AdminQueries.CREATE_POST_TABLE);
+            stm.addBatch(AdminQueries.CREATE_COMMENT_TABLE);
+            stm.addBatch(AdminQueries.CREATE_COMMENT_LIKE_TABLE);
+            stm.addBatch(AdminQueries.CREATE_POST_LIKE_TABLE);
+            stm.addBatch(AdminQueries.CREATE_POST_SHARE_TABLE);
+            stm.addBatch(AdminQueries.CREATE_NOTIF_TABLE);
+            stm.addBatch(AdminQueries.CREATE_PROFILE_NOTIF_TABLE);
 
             stm.executeBatch();
             return true;
