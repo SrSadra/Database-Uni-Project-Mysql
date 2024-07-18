@@ -26,9 +26,15 @@ public class Notif {
                     System.out.println("It's " +tmp.getCaused_username() + " Birthday!" );
                     break;
                     case 2: 
+                    System.out.println("Your profile has been seen by " + tmp.getCaused_username());
+                    break;
+                    case 3:
+                    
 
                 }
             }
         }
     }
+
+
 }

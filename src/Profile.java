@@ -7,6 +7,8 @@ import java.util.Scanner;
 import javax.swing.JFileChooser;
 import javax.swing.filechooser.FileNameExtensionFilter;
 
+import model.NotifModel;
+import model.ProfileModel;
 import model.Skill;
 import model.User;
 
@@ -14,6 +16,8 @@ public class Profile {
     private UserManager userManager;
     private ProfileManager profileManager;
     private LanguageManager languageManager;
+    private SkillManager skillManager;
+    private NotifManager notifManager;
     private Scanner inp = ReqController.inp;
 
     // Profile(UserManager userManager){
@@ -24,19 +28,24 @@ public class Profile {
         userManager = new UserManager();
         profileManager = new ProfileManager();
         languageManager = new LanguageManager();
+        skillManager = new SkillManager();
+        notifManager = new NotifManager();
     }
 
 
 
     public void editIntro(int button, User user){
+        inp.nextLine();
         switch (button){
             case 1:
             System.out.println("Enter new Fisrt name: ");
             userManager.setFirstnameLastname(user.getUsername(), inp.nextLine(),button);
+            System.out.println("Your firstname has changed!");
             break;
             case 2:
             System.out.println("Enter new Last name: ");
             userManager.setFirstnameLastname(user.getUsername(), inp.nextLine(), button);
+            System.out.println("Your last name hast changed!");
             break;
         }
     }
@@ -62,6 +71,7 @@ public class Profile {
                 }
             }
             else if (button == 2){
+                inp.nextLine();
                 while (true){
                     System.out.println("Enter Skill name: ");
                     String skillname = inp.nextLine();
@@ -133,6 +143,7 @@ public class Profile {
 
 
     public void addProfileLang(User user){
+        inp.nextLine();
         while(true){
             System.out.println("Enter Your New Language: ");
             String lang = inp.nextLine();
@@ -148,10 +159,53 @@ public class Profile {
     }
 
 
+    public void showUserProfile(int profile_id,ProfileModel profileModel){
+        notifManager.createNotif(profileModel.getProfile_id(), new NotifModel("a user has seen the profile", profile_id, 6, null), 6); //cause username is null for security
 
-    // public void editFirstname(User user){
-    //     userManager.setFirstname(null, null)
-    // }
+        System.out.println(profileModel.getUsername() +"\nId: " + profileModel.getProfile_id() + "\nAbout: " + profileModel.getAbout());
+        System.out.println("----------------");
+        System.out.println("1.Show Skills");
+        int button = inp.nextInt();
+        if (button == 1){
+            while (true){
+                ArrayList<Skill> arr = profileManager.getUserSkills(profileModel.getUsername());
+                if (arr.size() == 0){
+                    System.out.println("No Skills Found...");
+                }
+                else{
+                    for (int i = 0 ; i < arr.size() ; i++){
+                        Skill skill = arr.get(i);
+                        System.out.println(i + 1 + " " + skill.getName()+ ": " + skill.getType() + " 1.Endorse");
+                    }
+                    inp.nextLine();
+                    String butt  = inp.nextLine();
+                    String[] buttArr = butt.split(" ");
+                    if (buttArr[1].equals("1")){//endorse
+                        Skill skill = arr.get(Integer.valueOf(buttArr[0]) - 1);
+                        if (skillManager.endorseSkill(skill, profileModel.getProfile_id())){
+                            System.out.println("You have endorse " + skill.getName() + " for " + profileModel.getUsername());
+                            return;
+                        }
+                        System.out.println("AN ERROR OCCURED!");
+                    }
+                }
+
+            }
+        }
+    }
+
+
+    public void addPosition(ProfileModel profileModel){
+        inp.nextLine();
+        while (true){
+            System.out.println("Enter your Current position: ");
+            String pos = inp.nextLine();
+            if (profileManager.addPosition(profileModel.getProfile_id(), pos) && notifManager.positionNotif(profileModel.getProfile_id(), profileModel.getUsername())){
+                return;
+            }
+            System.out.println("AN ERROR OCCURED!");
+        }
+    }
 
 
 }

@@ -7,18 +7,20 @@ class SkillType {
 }
 
 public class Skill {
-    private String id;
+    private int id;
     private String name;
     private String type;
+    private int endorse_count;
 
     
-    public Skill(String id, String name , String type ){
+    public Skill(int id, String name , String type, int endorse_count ){
         this.id = id;
         this.name = name;
         this.type = type;
+        this.endorse_count = endorse_count;
     }
 
-    public String getId() {
+    public int getId() {
         return id;
     }
 
@@ -28,5 +30,9 @@ public class Skill {
 
     public String getType() {
         return type;
+    }
+
+    public int getEndorse_count() {
+        return endorse_count;
     }
 }

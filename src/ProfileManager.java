@@ -28,6 +28,9 @@ public class ProfileManager {
             stm.setString(3, null);
             stm.setString(4, null);
             stm.setString(5, null);
+            stm.setString(6, null);
+            stm.setString(7, null);
+            stm.setString(8, null);
             stm.executeUpdate();
             return true;
         }catch (SQLException e){
@@ -49,6 +52,7 @@ public class ProfileManager {
 
             stm.setInt(1, prof_id);
             stm.setString(2, skill_id);
+            stm.setInt(3, 0);
             stm.executeUpdate();
             return true;
         }
@@ -67,7 +71,7 @@ public class ProfileManager {
             ResultSet rs = stm.executeQuery();
             ArrayList<Skill> arr = new ArrayList<>();
             while (rs.next()){
-                arr.add(new Skill(rs.getString("id"),rs.getString("name"), rs.getString("type")));
+                arr.add(new Skill(rs.getInt("id"),rs.getString("name"), rs.getString("type"), rs.getInt("endorse_count")));
             }
             return arr;
         }catch (SQLException e){
@@ -77,14 +81,14 @@ public class ProfileManager {
     }
 
 
-    public boolean deleteUserSkills(String username, String skill_id){
+    public boolean deleteUserSkills(String username, int skill_id){
         try{
             int prof_id = getProfileId(username);
 
             PreparedStatement stm = connection.prepareStatement(SkillQueries.DELETE_USER_SKILL);
             
             stm.setInt(1, prof_id);
-            stm.setString(2, skill_id);
+            stm.setInt(2, skill_id);
             stm.executeUpdate();
             return true;
         }catch (SQLException e){
@@ -97,7 +101,7 @@ public class ProfileManager {
 
     public int getProfileId(String prof_username){
         try {
-            PreparedStatement stm = connection.prepareStatement(SkillQueries.GET_SKILL_ID);
+            PreparedStatement stm = connection.prepareStatement(ProfileQueries.GET_PROFILE_BY_ID);
             stm.setString(1,prof_username);
             ResultSet res = stm.executeQuery();
             if (res.next()){
@@ -170,7 +174,6 @@ public class ProfileManager {
             stm.setString(1,username);
             ResultSet res = stm.executeQuery();
             if (res.next()){
-                System.out.println("alo");
                 return new ProfileModel(res.getInt("id"), res.getString("username"), res.getString("about"));
             }
             return null;
@@ -179,6 +182,75 @@ public class ProfileManager {
         }
         return null;
     }
+
+
+    public ProfileModel getProfileByLikeUsername(String username){
+        try {
+            PreparedStatement stm = connection.prepareStatement(ProfileQueries.GET_PROFILE_BY_LIKE_USERNAME);
+            // System.out.println(username);
+            stm.setString(1,username);
+            ResultSet res = stm.executeQuery();
+            if (res.next()){
+                return new ProfileModel(res.getInt("id"), res.getString("username"), res.getString("about"));
+            }
+            return null;
+        }catch (SQLException e){
+            System.out.println(e);
+        }
+        return null;
+    }
+
+    public boolean addPosition(int profile_id , String pos){
+        try {
+            PreparedStatement stm = connection.prepareStatement(ProfileQueries.UPDATE_POSITION);
+
+            stm.setString(1, pos);
+            stm.setInt(2, profile_id);
+            stm.executeUpdate();
+            return true;
+        }
+        catch (SQLException e){
+            System.out.println(e);
+        }
+        return false;
+    }
+
+
+    public ArrayList<ProfileModel> getUserBaseLocation(String location){
+        try{
+            PreparedStatement stm = connection.prepareStatement(ProfileQueries.GET_PROFILE_BY_LOCATION);
+            stm.setString(1, location);
+            ResultSet rs = stm.executeQuery();
+            ArrayList<ProfileModel> arr = new ArrayList<>();
+            while (rs.next()){
+                arr.add(new ProfileModel(rs.getInt(1), rs.getString(2), rs.getString(3)));
+            }
+            return arr;
+        }catch (SQLException e){
+            System.out.println(e);
+        }
+        return null;
+    }
+
+
+    public ArrayList<ProfileModel> getUserBaseCompany(String company){
+        try{
+            PreparedStatement stm = connection.prepareStatement(ProfileQueries.GET_PROFILE_BY_COMPANY);
+            stm.setString(1, company);
+            ResultSet rs = stm.executeQuery();
+            ArrayList<ProfileModel> arr = new ArrayList<>();
+            while (rs.next()){
+                arr.add(new ProfileModel(rs.getInt(1), rs.getString(2), rs.getString(3)));
+            }
+            return arr;
+        }catch (SQLException e){
+            System.out.println(e);
+        }
+        return null;
+    }
+
+
+
 
 
 }

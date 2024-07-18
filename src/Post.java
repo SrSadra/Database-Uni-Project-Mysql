@@ -2,15 +2,18 @@ import java.util.ArrayList;
 import java.util.Scanner;
 
 import model.CommentModel;
+import model.NotifModel;
 import model.PostModel;
 import model.ProfileModel;
 
 public class Post {
     private Scanner inp = ReqController.inp;
     private PostManager postManager;
+    private NotifManager notifManager;
 
     Post(){
         postManager = new PostManager();
+        notifManager = new NotifManager();
     }
 
 
@@ -51,6 +54,7 @@ public class Post {
             }
             else if (button == 2){
                 if(postManager.likePost(profileModel.getProfile_id(), postModel.getId())){
+                notifManager.createNotif(profileModel.getProfile_id(),new NotifModel("user post has been liked", postModel.getProfile_id(), 3, postModel.getUsername()), 3);
                 System.out.println("Post has been liked!"); 
                 return;
                 }
@@ -72,13 +76,32 @@ public class Post {
             System.out.println("There Is no comments yet...");
         }
         else{
+            // for (int i = 0 ; i < arr.size() ; i++){
+            //     CommentModel tmp = arr.get(i);
+            //     System.out.println(tmp.getUsername() + ": " + tmp.getData() + "  " + tmp.getTime() + "  1.like 2.reply");
+            //     if (tmp.getIs_replied()){
+            //         String space = "   ";
+            //             ArrayList<CommentModel> replies = postManager.getCommentReply(post_id, tmp.getId());
+            //             //work on this shit // also notification for comment and like comment!
+            //     }
+            // }
+            int cnt = 1;
+            ArrayList<CommentModel> tmpArr = new ArrayList<>();
+            System.out.println("Comments:\nLike or reply (skip)");
             for (int i = 0 ; i < arr.size() ; i++){
                 CommentModel tmp = arr.get(i);
-                System.out.println(tmp.getUsername() + ": " + tmp.getData() + "  " + tmp.getTime() + "  1.like 2.reply");
-                if (tmp.getIs_replied()){
-                    String space = "   ";
-                        ArrayList<CommentModel> replies = postManager.getCommentReply(post_id, tmp.getId());
-                        //work on this shit
+                System.out.println(cnt + "-" + tmp.getUsername() + ": " + tmp.getData() + "  " + tmp.getTime() + "  1.like 2.reply");
+                cnt++;
+                tmpArr.add(tmp);
+                if(tmp.getIs_replied()){
+                    ArrayList<CommentModel> replies = postManager.getCommentReply(post_id, tmp.getId());
+                    for (int j = 0 ; j < replies.size() ; j++){
+                        CommentModel tmp2 = replies.get(j);
+                        System.out.print("     ");
+                        System.out.println(cnt + "-" + tmp2.getUsername() + ": " + tmp2.getData() + "  " + tmp2.getTime() + "  1.like 2.reply");
+                        cnt++;
+                        tmpArr.add(tmp2);
+                    }
                 }
             }
             String button = inp.nextLine();
@@ -86,7 +109,7 @@ public class Post {
                 sendComment(profileModel, post_id);
             }
             String[] butt = button.split(" ");
-            CommentModel tmp = arr.get(Integer.valueOf(butt[0]) - 1);// imple
+            CommentModel tmp = tmpArr.get(Integer.valueOf(butt[0]) - 1);
             if (butt[1].equals("1")){//like
                 if (postManager.likeComment(profileModel.getProfile_id(), post_id)){
                     System.out.println("You liked " + tmp.getUsername() + " message!");
@@ -94,7 +117,7 @@ public class Post {
             }else if (butt[1].equals("2")){// reply
                 System.out.println("Enter your text for reply: ");
                 String text = inp.nextLine();
-
+                postManager.sendComment(profileModel.getProfile_id(), post_id, text, 1, tmp.getId());
             }
 
         }
@@ -102,13 +125,13 @@ public class Post {
 
 
     public void sendComment(ProfileModel profileModel,int post_id){
-        System.out.println("Enter your Comment: ");
+        System.out.println("Enter your Comment (skip): ");
         while(true){
             String text = inp.nextLine();
             if(text.equals("skip")){
                 return;
             }
-            if (!postManager.sendComment(profileModel.getProfile_id(), post_id, text)){
+            if (!postManager.sendComment(profileModel.getProfile_id(), post_id, text, 0 , -1)){
                 System.out.println("AN ERROR OCCURED!");
                 continue;
             }

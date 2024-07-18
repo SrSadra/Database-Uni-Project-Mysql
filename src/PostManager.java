@@ -141,7 +141,7 @@ public class PostManager {
     }
 
 
-    public boolean sendComment(int profile_id,int post_id ,String text){
+    public boolean sendComment(int profile_id,int post_id ,String text, int button , int ref_id){
         try{
             PreparedStatement stm = connection.prepareStatement(PostQueries.CREATE_COMMENT);
 
@@ -151,8 +151,20 @@ public class PostManager {
             stm.setString(3, text);
             stm.setDate(4, new java.sql.Date((tmp.getTime())));
             stm.setBoolean(5, false);
-            stm.setInt(6, 0);
+            if (button == 1){ // is reply for certain comment
+                stm.setInt(6, ref_id);
+            }
+            else{
+                stm.setInt(6, 0);
+            }
             stm.executeUpdate();
+
+            if (button == 1){
+                //update rahbar
+                PreparedStatement stm2 = connection.prepareStatement(PostQueries.UPDATE_MAIN_COMMENT_ISREPLIED);
+                stm2.setInt(1, ref_id);
+                stm2.executeUpdate();
+            }
             return true;
         }catch (SQLException e){
             System.out.println(e);
@@ -241,6 +253,21 @@ public class PostManager {
             System.out.println(e);
         }
         return null;
+    }
+
+
+    public int getProfileIdByPost(int post_id){
+        try {
+            PreparedStatement stm = connection.prepareStatement(PostQueries.GET_USER_ID_BY_POST_ID);
+            stm.setInt(1,post_id);
+            ResultSet res = stm.executeQuery();
+            if (res.next()){
+                return res.getInt(1);
+            }
+        }catch (SQLException e){
+            System.out.println(e);
+        }
+        return -1;
     }
 
 

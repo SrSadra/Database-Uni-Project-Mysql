@@ -1,20 +1,25 @@
 import java.util.ArrayList;
 import java.util.Scanner;
 
+import model.NotifModel;
 import model.ProfileModel;
 
 public class Network {
     private Scanner inp = ReqController.inp;
     private NetworkManager networkManager; 
     private ProfileManager profileManager;
+    private NotifManager notifManager;
+    private Profile profileClass;
 
     public Network(){
         networkManager = new NetworkManager();
         profileManager = new ProfileManager();
+        profileClass = new Profile();
     }
 
 
     public void searchUser(ProfileModel profile){// need work
+        int profile_id = profile.getProfile_id();
         while (true){
             System.out.println("Search Username to send invitation: ");
             String username = inp.next();
@@ -23,13 +28,78 @@ public class Network {
                 System.out.println("There is no such User");
                 continue;
             }
-            if (networkManager.createInvitation(profile.getProfile_id(), to.getProfile_id())){
+            if (networkManager.createInvitation(profile_id, to.getProfile_id())){
                 System.out.println("An Invitation has been sent to " + to.getUsername());
+                profileClass.showUserProfile(profile_id, to);
                 return;
             }
             System.out.println("AN ERROR OCCURED!");
         }
+    }
 
+    public void searchGeneral(ProfileModel profileModel){
+        System.out.println("Select your filtering:\n1.basic search\nbased on:\n2.location 3.profile language 4.current company");
+        int button = inp.nextInt();
+        inp.nextLine();
+        if (button == 1){
+            basicSearch(profileModel);
+        }
+        else if (button == 2){
+            searchBaseLocation(profileModel);
+        }
+        else if (button == 3){
+
+        }
+        else {
+            searchBaseCompany(profileModel);
+        }
+    }
+
+    public void basicSearch(ProfileModel profileModel){
+        System.out.println("Enter username: ");
+        String username = inp.nextLine();
+        username = "%" + username + "%";
+        ProfileModel target = profileManager.getProfileByLikeUsername(username);
+        profileClass.showUserProfile(profileModel.getProfile_id(), target);
+    }
+
+    public void searchBaseLocation(ProfileModel profileModel){
+        while(true){
+            System.out.println("Enter location to search");
+            String location = inp.nextLine();
+            ArrayList<ProfileModel> target = profileManager.getUserBaseLocation(location);
+            if (target.size() == 0){
+                System.out.println("There is No user With this Location provided...");
+                continue;
+            }
+            for (int i = 0 ; i< target.size() ; i++){
+                System.out.println(i + 1 + "-" + target.get(i).getUsername());
+            }
+            int button = inp.nextInt();
+            ProfileModel tmp = target.get(button - 1);
+            profileClass.showUserProfile(profileModel.getProfile_id(), tmp);
+            return;
+        }
+    }
+
+
+    public void searchBaseCompany(ProfileModel profileModel){
+        while(true){
+            System.out.println("Enter Company to search");
+            String company = inp.nextLine();
+            ArrayList<ProfileModel> target = profileManager.getUserBaseCompany(company);
+            if (target.size() == 0){
+                System.out.println("There is No user With this company provided...");
+                continue;
+            }
+            for (int i = 0 ; i< target.size() ; i++){
+                System.out.println(i + 1 + "-" + target.get(i).getUsername());
+            }
+            int button = inp.nextInt();
+            ProfileModel tmp = target.get(button - 1);
+            profileClass.showUserProfile(profileModel.getProfile_id(), tmp);
+            return;
+        }
     }
 
     public void getInvitation(ProfileModel profile){

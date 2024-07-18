@@ -32,6 +32,7 @@ public class AdminPanel {
             stm.addBatch(AdminQueries.CREATE_POST_SHARE_TABLE);
             stm.addBatch(AdminQueries.CREATE_NOTIF_TABLE);
             stm.addBatch(AdminQueries.CREATE_PROFILE_NOTIF_TABLE);
+            stm.addBatch(AdminQueries.CREATE_LIKES_TABLE);
 
             stm.executeBatch();
             return true;

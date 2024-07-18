@@ -36,11 +36,12 @@ public class LanguageManager {
             PreparedStatement stm = connection.prepareStatement(ProfileQueries.GET_LANGUAGE);
             stm.setString(1,lang);
             ResultSet res = stm.executeQuery();
-            if(res.getInt("name") == 0){
+            if (res.next()){
+                return true;
+            }else{
                 System.out.println("THERE IS NO SUCH LANGUAGE!");
                 return false;
             }
-            return true;
         }catch (SQLException e){
             System.out.println(e);
         }

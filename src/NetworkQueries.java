@@ -12,4 +12,5 @@ public class NetworkQueries {
     "VALUES (?, ?,?);";
     public static final String GET_MUTUAL_CONNECTIONS = "SELECT c1.profile_id,c2.profile_id , count(*) as counts FROM  connection c1 INNER JOIN connection c2 ON c1.friend_id = c2.friend_id GROUP BY c1.profile_id, c2.profile_id HAVING c1.profile_id = ? AND c2.profile_id = ?;";
     public static final String GET_CONNECTIONS = "SELECT p.id, p.username, p.about FROM connection c INNER JOIN profile p ON c.friend_id = p.id  where c.profile_id = ?";
+    public static final String GET_CONNECTIONS_ID = "SELECT friend_id FROM connection where profile_id = ?";
 }

@@ -11,6 +11,9 @@ public class ReqController {
     private SignInUp signInUp;
     private Network network;
     private Direct direct;
+    private Post post;
+    private Profile profile;
+    private Notif notif;
 
 
     public ReqController(){
@@ -18,6 +21,9 @@ public class ReqController {
         signInUp = new SignInUp();
         network = new Network();
         direct = new Direct();
+        post = new Post();
+        profile = new Profile();
+        notif = new Notif();
     }
 
 
@@ -80,20 +86,57 @@ public class ReqController {
 
 
     public void userDashboard(){
-        System.out.println("1.My Network\n2.Directs\n3.Edit Profile");
+        while (true){
+            System.out.println("1.My Network\n2.Directs\n3.Edit Profile\n4.Homepage\n5.Your notif");
+            int button = inp.nextInt();
+            if (button == 1){
+                myNetworkMenu();
+            }
+            else if (button == 2){
+                directsMenu();
+            }
+            else if (button == 3){
+                settingMenu();
+            }
+            else if (button == 4){
+                post.HomePage(profileModel);
+            }
+            else if (button == 5){
+                notif.showNotif(profileModel);
+            }
+        }
+    }
+
+
+    public void settingMenu(){
+        System.out.println("1.Edit Intro\n2.Skills\n3.Edit About\n4.Edit background\n5.Edit Profile Language\n6.Edit Position");
         int button = inp.nextInt();
         if (button == 1){
-            myNetworkMenu();
+            System.out.println("1.Edit first name\n2.Edit lastname");
+            button = inp.nextInt();
+            profile.editIntro(button, userModel);
         }
         else if (button == 2){
-            directsMenu();
+            profile.editSkill(userModel);
+        }
+        else if (button == 3){
+            profile.addAbout(userModel);
+        }
+        else if (button == 4){
+            profile.addBackground(userModel);
+        }
+        else if (button == 5){
+            profile.addProfileLang(userModel);
+        }
+        else if (button == 6){
+            profile.addPosition(profileModel);
         }
     }
 
 
     public void myNetworkMenu(){
         while (true){
-            System.out.println("1.Search User\n2.Your Invitation\n3.People You May Know\n4.Back");
+            System.out.println("1.Search User\n2.Your Invitation\n3.People You May Know\n4.Search General User\n5.Back");
             // int mutual = new NetworkManager().mutualConnections(profileModel.getProfile_id());
             // System.out.println("(Mutual Connections: " + mutual + " )");
             int button = inp.nextInt();
@@ -108,6 +151,9 @@ public class ReqController {
                 network.peopleYouKnow(profileModel);
             }
             else if (button == 4){
+                network.searchGeneral(profileModel);
+            }
+            else{
                 return;
             }
         }
@@ -117,7 +163,7 @@ public class ReqController {
 
     public void directsMenu(){
         while (true){
-            System.out.println("1.Start a Conversation\n2.Directs Folders\n3.Search in Directs\n4.Manage Directs\n5.Back");
+            System.out.println("1.Start a Conversation\n2.Directs Folders\n3.Search in Directs\n4.Manage Directs\n5.back");
             int button = inp.nextInt();
             if (button == 1){
                 direct.startMessage(profileModel);
