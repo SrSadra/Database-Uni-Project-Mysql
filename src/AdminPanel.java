@@ -32,12 +32,27 @@ public class AdminPanel {
             stm.addBatch(AdminQueries.CREATE_POST_SHARE_TABLE);
             stm.addBatch(AdminQueries.CREATE_NOTIF_TABLE);
             stm.addBatch(AdminQueries.CREATE_PROFILE_NOTIF_TABLE);
-            stm.addBatch(AdminQueries.CREATE_LIKES_TABLE);
+            // stm.addBatch(AdminQueries.CREATE_LIKES_TABLE);
 
             stm.executeBatch();
             return true;
         }
         catch(SQLException e){
+            System.out.println(e);
+        }
+        return false;
+    }
+
+
+    public boolean createSkill(String name, String type){
+        try{
+            PreparedStatement stm = connection.prepareStatement(AdminQueries.INSER_SKILL);
+
+            stm.setString(1, name);
+            stm.setString(2, type);
+            stm.executeUpdate();
+            return true;
+        }catch(SQLException e){
             System.out.println(e);
         }
         return false;

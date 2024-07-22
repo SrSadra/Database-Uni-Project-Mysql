@@ -9,4 +9,13 @@ public class Helper {
         String[] tmp = birth.split("/");
         return (Date) new GregorianCalendar(Integer.valueOf(tmp[0]),Integer.valueOf(tmp[1]) - 1,Integer.valueOf(tmp[2])).getTime();
     }
+
+
+    public final static void clearConsole()
+{
+    System.out.print("\033\143");
 }
+}
+
+
+

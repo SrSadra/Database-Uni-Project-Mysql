@@ -29,8 +29,20 @@ public class Notif {
                     System.out.println("Your profile has been seen by " + tmp.getCaused_username());
                     break;
                     case 3:
-                    
-
+                    System.out.println(tmp.getWhy());
+                    break;
+                    case 4:
+                    System.out.println(tmp.getCaused_username() + " Commented on your post!");
+                    break;
+                    case 5:
+                    System.out.println(tmp.getWhy());
+                    break;
+                    case 6:
+                    System.out.println(tmp.getWhy());
+                    break;
+                    case 7:
+                    System.out.println(tmp.getWhy());//change position
+                    break;
                 }
             }
         }

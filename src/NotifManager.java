@@ -37,7 +37,7 @@ public class NotifManager {
 
     public boolean createNotif(int profile_id, NotifModel notifModel, int button){//to profile_id will be the notif sent
         try{
-            if (getNotif(notifModel.getCaused_by_id(), button)){
+            if (getNotif(notifModel.getCaused_by_id(), button, profile_id)){// dont send a notif twice
                 return false;
             }
             PreparedStatement stm = connection.prepareStatement(NotifQueries.CREATE_NOTIF, Statement.RETURN_GENERATED_KEYS);
@@ -67,11 +67,12 @@ public class NotifManager {
         return false;
     }
 
-    public boolean getNotif(int caused_by_id, int cause_no){
+    public boolean getNotif(int caused_by_id, int cause_no, int profile_id){
         try{
         PreparedStatement stm =  connection.prepareStatement(NotifQueries.GET_SPECIFIC_NOTIF);
         stm.setInt(1, caused_by_id);
         stm.setInt(2, cause_no);
+        stm.setInt(3, profile_id);
         ResultSet rs = stm.executeQuery();
         if (rs.next()){
             return true;
@@ -91,7 +92,7 @@ public class NotifManager {
             ResultSet rs = stm.executeQuery();
             while (rs.next()){
                 int friend_id = rs.getInt("friend_id");
-                if (!createNotif(friend_id, new NotifModel("your network has changed its position", profile_id, 8, username), 8)){ // also we can use insert (), (), () ....
+                if (!createNotif(friend_id, new NotifModel(username + " has changed its position!", profile_id, 7, username), 7)){ // also we can use insert (), (), () ....
                     return false;
                 }
             }

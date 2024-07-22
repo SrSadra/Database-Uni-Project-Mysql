@@ -1,5 +1,6 @@
 import java.util.Scanner;
 
+import helper.Helper;
 import model.ProfileModel;
 import model.User;
 
@@ -36,8 +37,6 @@ public class ReqController {
             }
             else if (button == 2){//user
                 userMenu();
-            }else{
-
             }
         }
 
@@ -45,7 +44,7 @@ public class ReqController {
 
     public void adminMenu(){
         while (true){
-            System.out.println("1.Start Tables\n2.");
+            System.out.println("1.Start Tables\n2.Add Skill");
             int button = inp.nextInt();
             if (button == 1){
                 if (!adminPanel.startTables()){
@@ -56,6 +55,27 @@ public class ReqController {
                     return;
                 }
             }
+            else if (button == 2){
+                inp.nextLine();
+                while(true){
+                    System.out.println("Enter Skill name (skip):");
+                    String tmp = inp.nextLine();
+                    if (tmp.equals("skip")){
+                        return;
+                    }
+                    System.out.println("Enter Skill type");
+                    String type = inp.nextLine();
+                    if (!adminPanel.createSkill(tmp, type)){
+                        System.out.println("AN ERROR OCCURED!");
+                    }
+                    else{
+                        System.out.println("New Skill " + tmp + " Added!");
+                    }
+
+                }
+
+
+            }
         }
     }
 
@@ -63,12 +83,14 @@ public class ReqController {
         while (true){
             System.out.println("1.SignIn\n2.SignUp\n3.Back");
             int button = inp.nextInt();
+            Helper.clearConsole();
             User user;
             if (button == 3){
                 return;
             }
             else if (button == 1){
                 userModel = signInUp.signIn();
+                Helper.clearConsole();
                 if (userModel == null){
                     System.out.println("AN ERROR OCCURED!");
                     continue;
@@ -80,6 +102,7 @@ public class ReqController {
             }
             else if (button == 2){
                 user = signInUp.signUp();
+                Helper.clearConsole();
             }
         }
     }
@@ -87,7 +110,7 @@ public class ReqController {
 
     public void userDashboard(){
         while (true){
-            System.out.println("1.My Network\n2.Directs\n3.Edit Profile\n4.Homepage\n5.Your notif");
+            System.out.println("1.My Network\n2.Directs\n3.Edit Profile\n4.Homepage\n5.Create Post\n6.Your notif\n7.Sign Out");
             int button = inp.nextInt();
             if (button == 1){
                 myNetworkMenu();
@@ -102,9 +125,23 @@ public class ReqController {
                 post.HomePage(profileModel);
             }
             else if (button == 5){
+                post.createPost(profileModel);
+            }
+            else if (button == 6){
                 notif.showNotif(profileModel);
             }
+            else{
+                signOut();
+            }
         }
+    }
+
+
+    public void signOut(){
+        System.out.println("See You later aligator!");
+        profileModel = null;
+        userModel = null;
+        userMenu();
     }
 
 

@@ -30,7 +30,7 @@ public class Network {
             }
             if (networkManager.createInvitation(profile_id, to.getProfile_id())){
                 System.out.println("An Invitation has been sent to " + to.getUsername());
-                profileClass.showUserProfile(profile_id, to);
+                profileClass.showUserProfile(profile, to);
                 return;
             }
             System.out.println("AN ERROR OCCURED!");
@@ -60,7 +60,7 @@ public class Network {
         String username = inp.nextLine();
         username = "%" + username + "%";
         ProfileModel target = profileManager.getProfileByLikeUsername(username);
-        profileClass.showUserProfile(profileModel.getProfile_id(), target);
+        profileClass.showUserProfile(profileModel, target);
     }
 
     public void searchBaseLocation(ProfileModel profileModel){
@@ -77,7 +77,7 @@ public class Network {
             }
             int button = inp.nextInt();
             ProfileModel tmp = target.get(button - 1);
-            profileClass.showUserProfile(profileModel.getProfile_id(), tmp);
+            profileClass.showUserProfile(profileModel, tmp);
             return;
         }
     }
@@ -97,7 +97,7 @@ public class Network {
             }
             int button = inp.nextInt();
             ProfileModel tmp = target.get(button - 1);
-            profileClass.showUserProfile(profileModel.getProfile_id(), tmp);
+            profileClass.showUserProfile(profileModel, tmp);
             return;
         }
     }
@@ -129,10 +129,12 @@ public class Network {
             }
             String[] butt = button.split(" ");
             if (butt[1].equals("1")){
-                if(!networkManager.acceptInvitation(profile.getProfile_id(), arr.get(Integer.valueOf(butt[0]) - 1).getProfile_id())){
+                ProfileModel tmp = arr.get(Integer.valueOf(butt[0]) - 1);
+                if(!networkManager.acceptInvitation(profile.getProfile_id(), tmp.getProfile_id())){
                     System.out.println("AN ERROR OCCURED!");
                     continue;
                 }
+                System.out.println("You have accept " + tmp.getUsername() + "invitation!");
                 return;
             }
             else {// ignote
@@ -145,9 +147,13 @@ public class Network {
 
     public void peopleYouKnow(ProfileModel profile){
         while(true){
-            System.out.println("Choose People you may know to Send Connect Req:");
             int id = profile.getProfile_id();
             ArrayList<ProfileModel> arr = networkManager.getPeopleYouKnow(id);
+            if (arr.size() == 0){
+                System.out.println("No User Found...");
+                return;
+            }
+            System.out.println("Choose People you may know to Send Connect Req:");
             for (int i = 0 ; i < arr.size() ; i++){
                 ProfileModel tmp = arr.get(i);
                 System.out.println(i + 1 + " " + tmp.getUsername());

@@ -32,8 +32,8 @@ public class AdminQueries {
         "id int NOT NULL PRIMARY KEY AUTO_INCREMENT,comment_id int NOT NULL,profile_id int NOT NULL)" ;
     public final static String CREATE_POST_LIKE_TABLE = "CREATE TABLE post_like (" +
         "id int NOT NULL PRIMARY KEY AUTO_INCREMENT,post_id int NOT NULL,profile_id int NOT NULL,time date NOT NULL)" ;  
-    public final static String CREATE_LIKES_TABLE = "CREATE TABLE likes (" +
-        "id int NOT NULL PRIMARY KEY AUTO_INCREMENT,post_id int NOT NULL,profile_id int NOT NULL)" ;
+    // public final static String CREATE_LIKES_TABLE = "CREATE TABLE likes (" +
+    //     "id int NOT NULL PRIMARY KEY AUTO_INCREMENT,post_id int NOT NULL,profile_id int NOT NULL)" ;
     public final static String CREATE_POST_SHARE_TABLE = "CREATE TABLE post_share (" +
         "post_id int NOT NULL,profile_id int NOT NULL,time date NOT NULL,CONSTRAINT PK_share PRIMARY KEY (post_id, profile_id))" ;
     public final static String CREATE_NOTIF_TABLE = "CREATE TABLE notif (" +
@@ -42,4 +42,9 @@ public class AdminQueries {
     //     "profile_id int NOT NULL,notif_id int NOT NULL,CONSTRAINT PK_share PRIMARY KEY (notif_id, profile_id))" ; 
     public final static String CREATE_PROFILE_NOTIF_TABLE = "CREATE TABLE profile_notif (" +
         "profile_id int NOT NULL,notif_id int NOT NULL,status varchar(30) NOT NULL,CONSTRAINT PK_share PRIMARY KEY (profile_id, notif_id))" ;
+
+
+    public final static String INSER_SKILL = "INSERT INTO skills (name, type) values (? , ?)";
 }
+
+

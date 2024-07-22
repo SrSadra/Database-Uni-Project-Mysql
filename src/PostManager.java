@@ -176,7 +176,6 @@ public class PostManager {
     public boolean likePost(int profile_id , int post_id){
         try{
             PreparedStatement stm = connection.prepareStatement(PostQueries.CREATE_POST_LIKE);
-
             Date tmp = new Date();
             stm.setInt(1, profile_id);
             stm.setInt(2, post_id);
@@ -214,7 +213,7 @@ public class PostManager {
             ResultSet rs = stm.executeQuery();
             ArrayList<PostModel> arr = new ArrayList<>();
             while (rs.next()){
-                PostModel tmp = new PostModel(profile_id, rs.getString(3), rs.getString(4));
+                PostModel tmp = new PostModel(rs.getInt("profile_id"), rs.getString(3), rs.getString(4));
                 tmp.setId(rs.getInt(1));
                 tmp.setTime(rs.getDate(5));
                 tmp.setUsername(rs.getString("username"));
@@ -242,7 +241,7 @@ public class PostManager {
             ResultSet rs = stm.executeQuery();
             ArrayList<PostModel> arr = new ArrayList<>();
             while (rs.next()){
-                PostModel tmp = new PostModel(profile_id, rs.getString(3), rs.getString(4));
+                PostModel tmp = new PostModel(rs.getInt("profile_id"), rs.getString(3), rs.getString(4));
                 tmp.setId(rs.getInt(1));
                 tmp.setTime(rs.getDate(5));
                 tmp.setUsername(rs.getString("username"));
