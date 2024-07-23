@@ -9,6 +9,7 @@ Of course there are some little bugs on the project but i did my best to fix the
 <img src = "./demo/8.PNG" width = "200">
 
 ##Demo
+
 ![](https://github.com/SrSadra/Database-Uni-Project-Mysql/blob/master/demo/demo.gif)
 
 ## How to Use
