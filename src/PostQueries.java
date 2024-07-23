@@ -22,4 +22,5 @@ public class PostQueries {
     public static final String GET_USER_FRIENDS_COMMENTED_POSTS = "SELECT p.*,pro.username FROM post p INNER JOIN comment com ON p.post_id = com.post_id INNER JOIN connection c ON com.profile_id = c.profile_id INNER JOIN profile pro ON pro.id = p.profile_id where c.friend_id = ? ORDER BY p.time";
     public static final String GET_USER_ID_BY_POST_ID = "SELECT profile_id FROM post where post_id = ?";
     public static final String UPDATE_MAIN_COMMENT_ISREPLIED = "UPDATE comment SET is_replied = true where id = ?";
+    public static final String GET_POST_LIKE = "SELECT id FROM post_like where profile_id = ? and post_id = ?";
 }

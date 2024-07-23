@@ -88,6 +88,7 @@ public class Profile {
     }
 
     public void addAbout(User user){
+        inp.nextLine();
         while (true){
             System.out.println("You can write about your years of experience, industry, or skills: ");
             String abouttext = inp.nextLine();

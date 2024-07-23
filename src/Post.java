@@ -48,7 +48,7 @@ public class Post {
             System.out.println("-------------------");
             System.out.println("likes: " + likesCnt);
             System.out.println("comments: " + commentCnt);
-            System.out.println("1.Show Comments  2.Like  3.Share");
+            System.out.println("1.Show Comments  2.Like  3.Share  4.Back");
             int button = inp.nextInt();
             if (button == 1){//show comments
                 showComments(profileModel, postModel.getId(), postModel.getProfile_id());
@@ -59,17 +59,19 @@ public class Post {
                 if(postManager.likePost(profileModel.getProfile_id(), postModel.getId())){
                 notifManager.createNotif(postModel.getProfile_id(),new NotifModel("your " + postModel.getTitle() + " post has been liked by " + profileModel.getUsername(), profileModel.getProfile_id(), 3, profileModel.getUsername()), 3);
                 System.out.println("Post has been liked!"); 
-                return;
                 }
-                System.out.println("AN ERROR OCCURED!");
+                else{
+                    System.out.println("AN ERROR OCCURED!");
+                }
             }
-            else{//share
+            else if (button == 3){//share
                 if (postManager.sharePost(profileModel.getProfile_id(), postModel.getId())){
                     System.out.println("This post has been Shared ");
                     return;
                 }
                 System.out.println("AN ERROR OCCURED!");
             }
+
         }
     }
 
@@ -77,6 +79,8 @@ public class Post {
         ArrayList<CommentModel> arr = postManager.getPostComments(post_id);
         if (arr.size() == 0){
             System.out.println("There Is no comments yet...");
+            sendComment(profileModel, post_id,postWriter_id );
+            return;
         }
         else{
             int cnt = 1;
@@ -141,12 +145,15 @@ public class Post {
             System.out.println("No posted yet...");
         }
         else{
-            System.out.println("Select a Post to show: ");
+            System.out.println("Select a Post to show (0): ");
             for (int i = 0 ; i < arr.size(); i++){
                 System.out.println(i + 1 + " " + arr.get(i).getUsername() + ": " + arr.get(i).getTitle());
             }
             int button = inp.nextInt();
             Helper.clearConsole();
+            if (button == 0){
+                return;
+            }
             PostModel tmp = arr.get(button - 1);
             System.out.println("---" + tmp.getProfile_id());
             int likeCnt = postManager.postLikeCount(tmp.getId());

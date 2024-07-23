@@ -17,7 +17,7 @@ public class DirectQueries {
     public static final String DELETE_DIRECT = "DELETE FROM directs d where d.direct_id = ?";
     public static final String GET_DIRECT_UNREADED = "SELECT d.* , p.username FROM directs d INNER JOIN profile p ON d.to_id = p.id where d.user_id = ? AND d.is_readed = 0";
     public static final String GET_DIRECT_ARCHIVED = "SELECT d.* , p.username FROM directs d INNER JOIN profile p ON d.to_id = p.id where d.user_id = ? AND d.is_archived = 1";
-    public static final String GET_DIRECT_BY_SEARCH = "SELECT distinct d.* , p.username  FROM message m INNER JOIN message_direct md ON m.message_id = md.message_id INNER JOIN directs d ON md.direct_id = d.direct_id INNER JOIN profile p ON d.user_id = p.id where m.data LIKE ? AND d.user_id = ?";
+    public static final String GET_DIRECT_BY_SEARCH = "SELECT distinct d.* , p.username  FROM message m INNER JOIN message_direct md ON m.message_id = md.message_id INNER JOIN directs d ON md.direct_id = d.direct_id INNER JOIN profile p ON d.to_id = p.id where m.data LIKE ? AND d.user_id = ?";
     public static final String GET_DIRECT_ID = "SELECT d.direct_id FROM directs d where d.user_id = ? and d.to_id = ?";
     public static final String DELETE_MESSAGE_DIRECT = "DELETE FROM message_direct md where md.direct_id = ?";
 }

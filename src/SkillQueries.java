@@ -8,6 +8,6 @@ public class SkillQueries {
     "VALUES (?, ?,?);";
     public static final String GET_SKILL_ID = "SELECT id FROM Skills where name = ?";
     public static final String DELETE_USER_SKILL = "DELETE FROM profile_skills where profile_id = ? AND skill_id = ?";
-    public static final String UPDATE_ENDORSE_SKILL = "UPDATE profile_skills SET endorse = ? where profile_id = ? AND skill_id = ?";
-    public static final String GET_ENDORSE_SKILL = "SELECT endorse from profile_skills where profile_id = ? AND skill_id = ?";
+    public static final String UPDATE_ENDORSE_SKILL = "UPDATE profile_skills SET endorse_count = ? where profile_id = ? AND skill_id = ?";
+    public static final String GET_ENDORSE_SKILL = "SELECT endorse_count from profile_skills where profile_id = ? AND skill_id = ?";
 }

@@ -138,6 +138,7 @@ public class ReqController {
 
 
     public void signOut(){
+        Helper.clearConsole();
         System.out.println("See You later aligator!");
         profileModel = null;
         userModel = null;

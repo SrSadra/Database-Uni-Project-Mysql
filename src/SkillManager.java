@@ -51,7 +51,7 @@ public class SkillManager {
             ResultSet res = stm.executeQuery();
             int endorse = 0;
             if (res.next()){
-                endorse = res.getInt("endorse");
+                endorse = res.getInt("endorse_count");
             }
             endorse += 1;
 

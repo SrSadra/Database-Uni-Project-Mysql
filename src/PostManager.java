@@ -175,6 +175,18 @@ public class PostManager {
 
     public boolean likePost(int profile_id , int post_id){
         try{
+            PreparedStatement stm2 = connection.prepareStatement(PostQueries.GET_POST_LIKE);
+            stm2.setInt(1,profile_id);
+            stm2.setInt(2,post_id);
+            ResultSet res = stm2.executeQuery();
+            int idtmp = -1;
+            if (res.next()){
+                idtmp = res.getInt("id");
+            }
+            if (idtmp != -1){
+                System.out.println("You have liked this post!");
+                return false;
+            }
             PreparedStatement stm = connection.prepareStatement(PostQueries.CREATE_POST_LIKE);
             Date tmp = new Date();
             stm.setInt(1, profile_id);

@@ -50,7 +50,7 @@ public class Direct {
 
 
     public void goDirect(int direct_id,ProfileModel profile, ProfileModel to){
-        inp.nextLine();
+        // inp.nextLine();
         ArrayList<Message> arr = directManager.getDirectMessages(direct_id);
         if (arr.size() == 0){
             System.out.println("There is no message...\nStart conversation (skip):");
@@ -62,7 +62,7 @@ public class Direct {
                 Message message = arr.get(i);
                 if (message.getFrom_id() == to.getProfile_id()){ // if sender is our contact
                     System.out.print("               ");
-                    System.out.println(to.getUsername() + " : " + message.getData() + "  " + message.getTime());
+                    System.out.println(message.getData() + "  " + message.getTime() + " : " + to.getUsername());
                 } 
                 else{//if us
                     System.out.println(profile.getUsername() + " : " + message.getData() + "  " + message.getTime());

@@ -35,7 +35,6 @@ public class DirectManager {
             //still dont know
             ArrayList<ProfileModel> arr = new ArrayList<>();
             while(res.next()){
-                System.out.println("alfa");
                 arr.add(new ProfileModel(res.getInt("p.id"), res.getString("p.username"), res.getString("p.about")));
             }
             return arr;
