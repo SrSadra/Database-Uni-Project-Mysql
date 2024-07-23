@@ -8,7 +8,7 @@ Of course there are some little bugs on the project but i did my best to fix the
 
 <img src = "./demo/8.PNG" width = "200">
 
-##Demo
+## Demo (wait)
 
 ![](https://github.com/SrSadra/Database-Uni-Project-Mysql/blob/master/demo/demo.gif)
 
@@ -21,7 +21,9 @@ just run app.java
 
 ## Note
 1- this program doesn't have GUI and you should work with Command Promt.
+
 2- libraries used: io.github.cdimascio.dotenv.Dotenv for env variables;
+
 3- add com.mysql.cj.jdbc.Driver to your project library and use your own url,username & password for dbsm
 
 License
