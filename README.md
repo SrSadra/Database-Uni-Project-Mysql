@@ -5,9 +5,11 @@ login and signup, creating post, find user and send connection invitation to the
 You can find sql queries in *Queries file, database logics in *Manager file and request handlers in corresponding files and also database models pdf is available!
 Of course there are some little bugs on the project but i did my best to fix them :)
 
+
 <img src = "./demo/8.PNG" width = "200">
 
-
+##Demo
+![](https://github.com/SrSadra/Database-Uni-Project-Mysql/blob/master/demo/demo.gif)
 
 ## How to Use
 
