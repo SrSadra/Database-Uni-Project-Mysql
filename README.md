@@ -6,9 +6,12 @@ You can find sql queries in *Queries file, database logics in *Manager file and 
 Persian project description is in same directory too!
 Of course there are some little bugs on the project but i did my best to fix them :)
 
+
 <img src = "./demo/8.PNG" width = "200">
 
+## Demo (wait)
 
+![](https://github.com/SrSadra/Database-Uni-Project-Mysql/blob/master/demo/demo.gif)
 
 ## How to Use
 
@@ -19,7 +22,9 @@ just run app.java
 
 ## Note
 1- this program doesn't have GUI and you should work with Command Promt.
+
 2- libraries used: io.github.cdimascio.dotenv.Dotenv for env variables;
+
 3- add com.mysql.cj.jdbc.Driver to your project library and use your own url,username & password for dbsm
 
 License
